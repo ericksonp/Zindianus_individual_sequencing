@@ -80,7 +80,7 @@ sv.data[,POS:=as.numeric(POS)]
 sv.data[,SVLEN:=as.numeric(SVLEN)]
 
 #assuming that any SVs large enough to influence PCs will be at least 500 kb
-inv<-sv.data[as.numeric(SVLEN)>1000000&as.numeric(SU)>5, .(CHROM, POS)]
+inv<-sv.data[as.numeric(SVLEN)>1000000&as.numeric(SU)>5, .(CHROM, POS, SVLEN)]
 
 large<-sv.data[as.numeric(SVLEN)>100000&as.numeric(SU)>25, .(CHROM, POS)]
 #9 on scaffold 1, 10 on scaffold 2, 1 on 3, 1 on 4, 7 on 5
@@ -198,3 +198,24 @@ genos.large[sv1523==0|sv2107==1|sv1523==1, sample.id]
 
 bam.files2<-paste0("/scratch/perickso/private/ind_seq/RGSM_final_bams/", genos.large[sv1523==0|sv2107==1|sv1523==1, sample.id], ".RG.bam")
 fwrite(list(bam.files2), file="/scratch/perickso/private/ind_seq/sv/scaffold1_twoSVs.csv")
+
+
+#look at frequencies of large variants in Africa and North America
+metadata<-fread("/scratch/perickso/private/ind_seq/zap_full_info_updated_v2.csv", drop=1)
+samps <- read.gdsn(index.gdsn(geno, "sample.id"))
+
+africa<-metadata[continent=="Africa", sample.id]
+namer<-metadata[continent=="NorthAmerica"&sample.id%in%samps, sample.id]
+
+
+af.freqs<-snpgdsSNPRateFreq(geno, sample.id=africa, with.id=T)
+na.freqs<-snpgdsSNPRateFreq(geno, sample.id=namer, with.id=T)
+
+info[,africa.freq:=af.freqs$AlleleFreq]
+info[,na.freq:=na.freqs$AlleleFreq]
+info[,freq.diff:=abs(africa.freq-na.freq)]
+
+alldat<-cbind(info, sv.data)
+alldat[SVLEN>1000000,.(chr, pos, SVLEN, africa.freq, na.freq, freq.diff)]
+
+

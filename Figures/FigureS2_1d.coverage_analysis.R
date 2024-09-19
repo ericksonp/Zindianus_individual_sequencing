@@ -6,6 +6,7 @@ library(foreach)
 library(viridis)
 library(ggsci)
 library(ggpubfigs)
+library(scales)
 
 #list of samples
 samps<-fread("/scratch/perickso/private/ind_seq/all_individual_samples.txt", header=F)$V1
@@ -43,7 +44,8 @@ jpeg("/scratch/perickso/private/ind_seq/Figures/depth_by_scaffold.jpeg", height=
 ggplot(cov[chr<=10&(Sex=="M"|Sex=="F")])+ 
   geom_boxplot(aes(x=as.factor(chr), y=meandepth, color=Sex))+
   labs(x="Scaffold", y="Mean Sequencing Depth")+
-  geom_text(data=intervals[chr<=10], aes(x=as.factor(chr), label=as.character(length), y=42),angle = 45)+
+ # geom_text(data=intervals[chr<=10], aes(x=as.factor(chr), label=as.character(length), y=42),angle = 45)+
+  geom_text(data=intervals[chr<=10], aes(x=as.factor(chr), label=format(length, big.mark=",", scientific=FALSE), y=42),angle = 45)+
   scale_color_manual(values = friendly_pal("bright_seven"))+
   lims(y=c(0,45))
   

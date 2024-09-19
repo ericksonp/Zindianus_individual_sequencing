@@ -32,12 +32,12 @@ final[,ky:=x/1000]
 final[,type:=ifelse(loc%in%c("Kenya", "Zambia", "SenegalForest", "SenegalDesert", "SaoTome"), "native", "introduced")]
 final[loc%in%c("Kenya", "Zambia", "SenegalForest", "SenegalDesert", "SaoTome"),type2:="native"]
 final[label=="MIA_2019_June", type2:="introduced-Florida"]
-final[grepl("early", label),type2:="introduced-early"]
-final[grepl("mid", label),type2:="introduced-early"]
+final[grepl("early", label),type2:="introduced-Virginia"]
+final[grepl("mid", label),type2:="introduced-Virginia"]
 
-final[grepl("late", label),type2:="introduced-late"]
+final<-final[!grepl("late", label)]
 final[is.na(type2), type2:="introduced"]
-final[,type2:=factor(type2, levels=c("introduced-Florida", "introduced-early",  "native" ))]
+final[,type2:=factor(type2, levels=c("introduced-Florida", "introduced-Virginia",  "native" ))]
 final<-final[order(type2)]
 final[,label:=as.factor(label)]
 final[,label:=factor(label, levels=rev(levels(final$label)))]
@@ -70,7 +70,7 @@ final[,label:=factor(label, levels=rev(levels(final$label)))]
 
 smcpp.plot<-ggplot()+
  # geom_line(data=folds[type2%in%c("native", "introduced-Florida", "introduced-early")], aes(x=x, y=y, group =interaction(pop,fold), color=as.factor(type2)), size=0.1)+
-  geom_line(data=final[type2%in%c("native", "introduced-Florida", "introduced-early")], aes(x=x, y=y, color=type2, group=label), size=1.5)+  
+  geom_line(data=final[type2%in%c("native", "introduced-Florida", "introduced-Virginia")], aes(x=x, y=y, color=type2, group=label), size=1.5)+  
   scale_x_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x))

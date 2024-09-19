@@ -11,6 +11,12 @@ library(ggsci)
 library(ggLD)
 library(ggpubfigs)
 library(dplyr)
+library(scales)
+
+scientific <- function(x){
+  ifelse(x==0, "0", parse(text=gsub("[+]", "", gsub("e", " %*% 10^", scientific_format()(x)))))
+}
+
 
 metadata<-fread("/scratch/perickso/private/ind_seq/zap_full_info_updated_v2.csv", drop=1)
 
@@ -91,6 +97,25 @@ ihs.VA[,pop:="Virginia"]
 ihs.VA[order(IHS)] #973443
 
 ihs.high<-ihs.VA[IHS>5&CHR=="Scaffold_3"&POSITION<1500000, POSITION]
+
+#make table that produces a relative position for each SNP
+snp_spacing=round((max(ihs.high)-min(ihs.high))/400)
+position.table<-data.table(pos=ihs.high,
+                           count=c(1:length(ihs.high)),
+                           uniform_pos=seq(min(ihs.high), max(ihs.high), by=snp_spacing),
+                           y1=0,
+                           y2=1)
+
+
+#make plot that shows spacing of SNPs
+top_scale<-ggplot(position.table)+
+  geom_segment(aes(x=uniform_pos, xend=pos, y=y1, yend=y2), linewidth=0.1)+
+  scale_x_continuous(position="top", label=scientific, expand = c(0, 0))+
+  labs(x="Chromosome 3 position")+
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line.y=element_blank())
 
 #load FST
 
@@ -189,6 +214,10 @@ jpeg("/scratch/perickso/private/ind_seq/Figures/haplotype_plusLD_revised.jpeg", 
 plot_grid(fst.plot, ihs.plot, haplo.plot, ld.plot, nrow=4, labels=c("A", "B", "C", "D"), rel_heights=c(0.1, 0.1, 0.5, 0.3), align="v",axis="lr")
 dev.off()
 
+jpeg("/scratch/perickso/private/ind_seq/Figures/haplotype_plusLD_revised_withscale.jpeg", height=10, width=6,units="in", res=300 )
+
+plot_grid(top_scale, fst.plot, ihs.plot, haplo.plot, ld.plot, nrow=5, labels=c("", "A", "B", "C", "D"), rel_heights=c(0.1, 0.1, 0.1, 0.4, 0.3), align="v",axis="lr")
+dev.off()
 
 
 #plot LD in Africa and in FL--> supplemental figure
