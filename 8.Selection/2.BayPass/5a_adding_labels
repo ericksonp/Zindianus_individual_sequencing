@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=20G
+#SBATCH --time=200:00:00
+#SBATCH --partition=basic
+
+#change the file based upon how you run your scripts
+
+module load R  
+
+Rscript --no-save --no-restore '/scratch/perickso_shared/alexandra/BayPassAlexEdited/addingLabelsTwo.r'
