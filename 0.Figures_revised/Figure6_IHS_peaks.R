@@ -245,6 +245,7 @@ ggLD <- function(data){
     ggplot2::theme_void() +
     ggplot2::scale_fill_distiller(type = "seq", palette = 1, direction = 1)
 }
+
 ldmat5<-ld5$LD^2 #need to square because "composite" returns correlation coefficient
 #ldmat[upper.tri(ldmat)] <- NA
 lddt5<-as.data.table(ldmat5)
@@ -264,22 +265,10 @@ ld.plot5<-ggLD(lddt5)+labs(fill="LD")+
 right<-plot_grid(bp.plot5, ehhplot5, top_scale5, haplo.plot5, ld.plot5, nrow=5, labels=c("b","d ", "", "f", "h" ), rel_heights=c(1.5,2,1,4,3), align="v",axis="lr")
 
 
-#look for missense variants in highest IHS region
-
-eff<-fread("/scratch/perickso/private/ind_seq/SnpEff_annotations_data_table.csv")
-setnames(eff, c("CHROM", "POS"), c("CHR", "POSITION"))
-
-eff<-merge(eff, ihs.VA, by=c("CHR", "POSITION"))
-eff[CHR=="Scaffold_5"&IHS>4]
-#IHS of 4.69 at 7883497, missesnse variant PHE->LEUC
-
 
 ##################################################
 #Let's take a look at the IHS peak on scaffold 2
 ##################################################
-scientific <- function(x){
-  ifelse(x==0, "0", parse(text=gsub("[+]", "", gsub("e", " %*% 10^", scientific_format()(x)))))
-}
 
 #load("/scratch/perickso/private/ind_seq/popgen/rehh_wgscan_bychr_CMHPO.Rdat")
 #ihs.VA[order(IHS, decreasing=T)][CHR=="Scaffold_2"]
@@ -432,11 +421,9 @@ ld.plot2<-ggLD(lddt2)+labs(fill="LD")+
 left<-plot_grid(bp.plot2, ehhplot2, top_scale2, haplo.plot2, ld.plot2, nrow=5, labels=c("a"," c","", "e", "g" ), rel_heights=c(1.5,2,1,4,3), align="v",axis="lr")
 
 
-jpeg("/scratch/perickso/private/ind_seq/popgen/plots/selection_peaks_2and5.jpg", 
-     height=10, 
-     width=8,
-     units="in", 
-     res=300 )
+#jpeg("/scratch/perickso/private/ind_seq/popgen/plots/Figure6_selection_peaks_2and5.jpg",  height=10, width=10, units="in", res=300 )
+#pdf("/scratch/perickso/private/ind_seq/popgen/plots/Figure6_selection_peaks_2and5.pdf",  height=10, width=10)
+tiff("/scratch/perickso/private/ind_seq/popgen/plots/Figure6_selection_peaks_2and5.tif",  height=10, width=10, units="in", res=600, compression="lzw" )
 plot_grid(left, right, nrow=1, align="h", axis="tb")
 dev.off()
 

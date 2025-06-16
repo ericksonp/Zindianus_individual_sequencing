@@ -102,10 +102,9 @@ smcpp.plot<-ggplot()+
   labs(x="years before present", y="population size", color=NULL)+
   scale_color_manual(values = friendly_pal("ito_seven")[c(1,4,6)])+
   scale_fill_manual(values = friendly_pal("ito_seven")[c(1,4,6)])+
-  theme(legend.position = c(0.3, 0.1)) + guides(fill="none")
+  theme(legend.position = c(0.6, 0.1)) + guides(fill="none")
 
   
-
 
 #IBSO/kinship
 #geno <- snpgdsOpen("/scratch/perickso/private/ind_seq/popgen/zaprionus.individual.2023.vcf.gds" , allow.fork=T)

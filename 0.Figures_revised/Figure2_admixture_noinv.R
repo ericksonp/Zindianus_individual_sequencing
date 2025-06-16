@@ -50,7 +50,9 @@ y[,loc.label:=loc.spec]
 y[loc.label=="VA-CM"|loc.spec=="VA-HPO", loc.label:=paste0(loc.spec, "-", Year )]
 y[,loc.label:=factor(loc.label, levels=c("Africa", "FL", "VA-CM-2017", "VA-CM-2018", "VA-CM-2019", "VA-CM-2020", "VA-HPO-2019", "VA-HPO-2020"))]
 
-jpeg('/scratch/perickso/private/ind_seq/Figures/admixture_autosomes_noinv.jpg', height=6, width=10, units="in", res=2400)
+pdf('/scratch/perickso/private/ind_seq/Figures/Figure2_admixture_autosomes_noinv.pdf', height=5, width=8)
+
+#jpeg('/scratch/perickso/private/ind_seq/Figures/admixture_autosomes_noinv.jpg', height=6, width=10, units="in", res=2400)
 
 ggplot(y[loc.spec%in%c("Africa", "FL", "VA-HPO", "VA-CM")], aes(fill=as.factor(new.k.group), y=proportion, x=sample.id)) + 
   geom_bar(position="fill", stat="identity")+

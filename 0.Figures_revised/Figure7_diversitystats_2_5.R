@@ -268,10 +268,8 @@ j<-ggplot(depth.sum[chr==5&win>7800000&win<7950000&label%in%(c("Africa", "FL", "
 left<-plot_grid(a,c,e,g,i, nrow=5, labels=c("a", "c", "e", "g", "i"), align="v", axis = "lr")
 right<-plot_grid(b,d,f,h,j, nrow=5, labels=c("b", "d", "f", "h", "j"), align="v", axis = "lr")
 
-jpeg("/scratch/perickso/private/ind_seq/popgen/plots/diversity_stats_scaffold_2and5.jpg", 
-     height=8, 
-     width=8,
-     units="in", 
-     res=300 )
+#jpeg("/scratch/perickso/private/ind_seq/popgen/plots/diversity_stats_scaffold_2and5.jpg", height=8, width=8, units="in", res=300 )
+
+pdf("/scratch/perickso/private/ind_seq/popgen/plots/Figure7_diversity_stats_scaffold_2and5.pdf", height=8, width=10)
 plot_grid(left, right, nrow=1, rel_widths=c(0.42, 0.58), align="h", axis="tb")
 dev.off()

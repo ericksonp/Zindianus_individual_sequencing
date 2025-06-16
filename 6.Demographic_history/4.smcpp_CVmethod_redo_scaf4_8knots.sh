@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks=10
-#SBATCH --mem=100G
+#SBATCH --ntasks=20
+#SBATCH --mem=200G
 #SBATCH --time=200:00:00
 #SBATCH --partition=basic
-#SBATCH --array=1-16
+#SBATCH --array=1-12
 
 #variable for populations--prepared input files with script smcpp_fileprep.R
 
@@ -34,11 +34,15 @@
 
 #comm -23 <(sort /scratch/perickso/private/ind_seq/popgen/smcpp/pops_for_smcpp.txt) <(sort /scratch/perickso/private/ind_seq/popgen/smcpp/pops_to_rerun) > /scratch/perickso/private/ind_seq/popgen/smcpp/pops_to_rerun_autosomes.txt
 
-pop=`sed -n ${SLURM_ARRAY_TASK_ID}p /scratch/perickso/private/ind_seq/popgen/smcpp/pops_to_rerun_autosomes.txt | cut -f 1`
+pop=`sed -n ${SLURM_ARRAY_TASK_ID}p /scratch/perickso/private/ind_seq/popgen/phlash/phlash_pops.txt | cut -f 1 `
 
 samps_list=`paste -sd, /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}.samps.smc.txt`
 
+nsamps=`wc -l < /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}.samps.smc.txt`
+
 samps=`paste -sd" " /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}.samps.smc.txt`
+
+echo "starting ${pop}"
 
 # #setting up slurm folder to tell where error occurs
 # echo "setting up folders"
@@ -78,15 +82,37 @@ samps=`paste -sd" " /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}.samps.
 # done
 
 #note that output was specified here twice...
-  echo "all files prepped, doing smc calculations"
+echo "all files prepped, doing smc calculations"
+
+unset PYTHONHOME
+unset PYTHONPATH
+
   /opt/containers/smc++ cv -o /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/ \
   --timepoints 2 10000 \
-   --folds 10 \
-   --cores 10 \
-   --knots 16 \
+   --folds $nsamps \
+   --cores 20 \
+   --knots 8 \
     2.8e-9 \
-    /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/*Scaffold_1*.smc.gz \
-    /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/*Scaffold_2*.smc.gz \
     /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/*Scaffold_4*.smc.gz \
-    /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/*Scaffold_5*.smc.gz \
-    -o /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/${pop}_cv_10folds_16knots_10000gen_autosomes
+    -o /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/${pop}_cv_10folds_8knots_10000gen_scaf4
+
+
+
+    echo "plotting final plot for ${pop}"
+
+      cd /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/${pop}_cv_10folds_8knots_10000gen_scaf4/
+      /opt/containers/smc++ plot /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/${pop}_cv_10folds_8knots_10000gen_scaf4/${pop}_CV10fold_final_plot.png \
+      model.final.json \
+        -g .08 \
+        --csv
+
+
+    echo "plotting folds"
+    for i in $(seq 1 $nsamps); do
+      echo ${i}
+      cd /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/${pop}_cv_10folds_8knots_10000gen_scaf4/fold${i}/
+      /opt/containers/smc++ plot /scratch/perickso/private/ind_seq/popgen/smcpp/${pop}/${pop}_cv_10folds_8knots_10000gen_scaf4/fold${i}/${pop}_fold${i}_final_plot.png \
+      model.final.json \
+        -g .08 \
+        --csv
+    done

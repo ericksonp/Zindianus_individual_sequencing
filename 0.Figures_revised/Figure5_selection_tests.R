@@ -110,7 +110,7 @@ fst.plot.FL<-ggplot()+
 
 bp.va.fl<-fread("/scratch/perickso_shared/alexandra/BayPassAlexEdited/allVAFemalesvsFLfemales/updated_data_for_manhattan.txt")
 bp.va.fl[,pos:=as.integer(tstrsplit(locations, split="_")[[3]])]
-
+setnames(info, "POSITION", "pos")
 bp.va.fl<-merge(bp.va.fl, info, by=c("pos", "Scaffold"))
 
 bp.plot.FL<-ggplot()+  
@@ -135,7 +135,13 @@ ihs.plot.FL<-ggplot()+
 
 right<-plot_grid(fst.plot.FL, bp.plot.FL, ihs.plot.FL, nrow=3, rel_heights=c(1, 1, 1.2), align="v", axis="lr", labels=c("b", "d", "f"))
 
-jpeg("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection.jpeg",  height=8, width=8, res=600, units="in")
+#pdf("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection.pdf",  height=8, width=10)
+#setEPS()
+#postscript("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection.eps")
+
+#jpeg("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection.jpeg",  height=8, width=10, res=600, units="in")
+tiff("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection.tif",  height=8, width=10, res=600, units="in", compression="lzw")
+
 plot_grid(left,right, nrow=1, align="h", axis="tb")
 dev.off()
 
