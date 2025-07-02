@@ -91,11 +91,10 @@ pca.all3[,Year:=as.character(Year)]
 pca.all3[loc.spec=="FL", Year:="Florida"]
 
 set.seed(100)
-dapcTemp_year<-dapc(cm.genos, pca.all3$Year, perc.pca=100, n.da=3)
-ascore_species <- optim.a.score(dapcTemp_year, smart = FALSE, n.sim = 10) 
-ascore_species
-dapc_year <- dapc(cm.genos, pca.all3$Year, 
-                  n.pca = ascore_species$best, n.da = 3)
+
+
+dapc_year <- dapc(cm.genos, pca.all3$Year, n.pca = 4, n.da = 3)
+
 #scatter.dapc(dapc_year, scree.pca = F, scree.da = F, legend = TRUE, col=friendly_pal("ito_seven"))
 #loadingplot(dapc_year$var.contr) 
 
@@ -276,7 +275,7 @@ newpoint <-function(p0,p1,c){
   p2
 }
 
-a<-ggscatter.dapc(x=dapc_year)+scale_color_manual(values=friendly_pal("ito_seven")[c(1:4,6)])+theme_cowplot()+theme(legend.position = "none")
+a<-ggscatter.dapc(x=dapc_year, label=FALSE, legend=TRUE)+scale_colour_manual(values=friendly_pal("ito_seven")[c(1:4,6)])+scale_fill_manual(values=friendly_pal("ito_seven")[c(1:4,6)])+theme_cowplot()
 ## treemix ###
 
 setwd("/scratch/perickso/private/ind_seq/popgen/treemix/") 
@@ -288,7 +287,7 @@ edge0<-read_treemix("bootstrap/5pops500snps_constree_bootrep_8")
 
 b<-plot_treemix(edge0, plot.nodes=F)+  scale_x_continuous(expand = expansion(mult = c(0.1, 0.5))) +theme(axis.title=element_text(size=14, vjust=1), axis.text=element_text(size=10))
 
-pdf("/scratch/perickso/private/ind_seq/Figures/Figure4_DAPC_treemix_noinv_cons.pdf", height=4, width=8)
+pdf("/scratch/perickso/private/ind_seq/Figures/Figure4_DAPC_treemix_noinv_cons_newstats2.pdf", height=4, width=8)
 
 plot_grid(a,b, nrow=1, labels=c("a", "b"), align="h")
 dev.off()

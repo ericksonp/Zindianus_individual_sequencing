@@ -102,7 +102,7 @@ smcpp.plot<-ggplot()+
   labs(x="years before present", y="population size", color=NULL)+
   scale_color_manual(values = friendly_pal("ito_seven")[c(1,4,6)])+
   scale_fill_manual(values = friendly_pal("ito_seven")[c(1,4,6)])+
-  theme(legend.position = c(0.6, 0.1)) + guides(fill="none")
+  theme(legend.position = c(0.3, 0.1)) + guides(fill="none")
 
   
 
@@ -172,7 +172,7 @@ k.time<-ggplot(kinship.table[Location.pop1=="VA-CM"&Location.pop2=="VA-CM"], aes
 
 kinship.plots<-plot_grid(k.all, k.time, nrow=2, labels=c("b", "c"),align="v", axis="lr")
 
-jpeg("/scratch/perickso/private/ind_seq/Figures/Figure3_updated_noinv.jpeg", height=6, width=10, res=300, units="in")
+pdf("/scratch/perickso/private/ind_seq/Figures/Figure3_updated_noinv.pdf", height=6, width=10)
 plot_grid(smcpp.plot, kinship.plots, align="v", axis="b", labels=c("a",""))
 dev.off()
 
