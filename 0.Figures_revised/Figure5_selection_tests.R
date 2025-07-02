@@ -60,7 +60,7 @@ bp.plot.africa<-ggplot()+
   geom_rect(data=snptags.africa, aes(xmin=first.snp, xmax=last.snp, ymin=-Inf, ymax=Inf), color="grey80")+
   geom_point(data=bp.va.af, aes(x=old.snp.id, y=M_XtX, color=as.factor(Scaffold)))+
   scale_color_manual(values = friendly_pal("ito_seven"))+
-  labs(x=NULL, y="XtX")+
+  labs(x=NULL, y="Virginia-Africa XtX")+
   theme(axis.text.x=element_blank())+
   guides(color="none")+
   lims(y=c(0,15))
@@ -79,7 +79,7 @@ ihs.plot.africa<-ggplot()+
   geom_rect(data=snptags.africa, aes(xmin=first.snp, xmax=last.snp, ymin=-Inf, ymax=Inf), color="grey80")+
   geom_point(data=ihs.VAall,aes(x=old.snp.id, y=IHS, color=CHR))+
   scale_color_manual(values = friendly_pal("ito_seven"), labels=c("1", "2", "3", "4", "5"))+
-  labs(x="SNP #", y="IHS", color="Chr.")+
+  labs(x="SNP #", y="Virginia IHS", color="Chr.")+
   scale_x_continuous(label=scientific)+
   lims(y=c(-4,8))+
   guides(color="none")+
@@ -117,7 +117,7 @@ bp.plot.FL<-ggplot()+
   geom_rect(data=snptags.FL, aes(xmin=first.snp, xmax=last.snp, ymin=-Inf, ymax=Inf), color="grey80")+
   geom_point(data=bp.va.fl, aes(x=old.snp.id, y=M_XtX, color=as.factor(Scaffold)))+
   scale_color_manual(values = friendly_pal("ito_seven"))+
-  labs(x=NULL, y="XtX")+
+  labs(x=NULL, y="Virginia-Florida XtX")+
   theme(axis.text.x=element_blank())+
   guides(color="none")+
   lims(y=c(0,15))
@@ -128,7 +128,7 @@ ihs.plot.FL<-ggplot()+
   geom_rect(data=snptags.FL, aes(xmin=first.snp, xmax=last.snp, ymin=-Inf, ymax=Inf), color="grey80")+
   geom_point(data=ihs.VAall,aes(x=old.snp.id, y=IHS, color=CHR))+
   scale_color_manual(values = friendly_pal("ito_seven"), labels=c("1", "2", "3", "4", "5"))+
-  labs(x="SNP #", y="IHS", color="Chr.")+
+  labs(x="SNP #", y="Virginia IHS", color="Chr.")+
   scale_x_continuous(label=scientific)+
   lims(y=c(-4,8))+
   guides(color="none")
@@ -140,7 +140,7 @@ right<-plot_grid(fst.plot.FL, bp.plot.FL, ihs.plot.FL, nrow=3, rel_heights=c(1, 
 #postscript("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection.eps")
 
 #jpeg("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection.jpeg",  height=8, width=10, res=600, units="in")
-tiff("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection.tif",  height=8, width=10, res=600, units="in", compression="lzw")
+tiff("/scratch/perickso/private/ind_seq/Figures/Figure_5_Africa_FL_selection_updated.tif",  height=8, width=10, res=600, units="in", compression="lzw")
 
 plot_grid(left,right, nrow=1, align="h", axis="tb")
 dev.off()
